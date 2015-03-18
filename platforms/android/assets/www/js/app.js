@@ -24,36 +24,44 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 abstract: true,
                 templateUrl: "templates/menu.html",
                 controller: 'AppCtrl'
-            }).state('menu.dates', {
-                url: "/dates",
+            }).state('menu.main', {
+                url: "/main",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/dates.html",
-                        controller: 'DatesCtrl'
+                        templateUrl: "templates/main.html",
+                        controller: 'MenuCtrl'
                     }
                 }
-            }).state('menu.users', {
-                url: "/users",
+            }).state('menu.es_1', {
+                url: "/es_1",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/users.html",
-                        controller: 'UsersCtrl'
+                        templateUrl: "templates/es_1.html",
+                        controller: 'Es1Ctrl'
                     }
                 }
-            }).state('menu.settings', {
-                url: "/settings",
+            }).state('menu.es_2', {
+                url: "/es_2",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/settings.html",
-                        controller: 'SettingsCtrl'
+                        templateUrl: "templates/es_2.html",
+                        controller: 'Es1Ctrl'
                     }
                 }
             });
             
-    $urlRouterProvider.otherwise('/menu/dates');
+    $urlRouterProvider.otherwise('/menu/main');
 });
 
 
 app.controller('AppCtrl', function($scope, $state){
+    
+});
+app.controller('MenuCtrl', function($scope, $state, $location){
+    $scope.goto = function(path){
+        $state.go(path);
+    };
+});
+app.controller('Es1Ctrl', function($scope){
     
 });
