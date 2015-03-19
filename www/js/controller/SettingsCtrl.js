@@ -1,3 +1,4 @@
-app.controller('SettingsCtrl', function($scope){
+angular.module('app.controller')
+        .controller('SettingsCtrl', function($scope){
     
-});
+        });

@@ -1,0 +1,31 @@
+<ion-view view-title="Utenti">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-dark " ng-click="add() ">
+            Add new
+        </button>
+    </ion-nav-buttons>
+    <ion-pane>
+        <ion-content>
+            <label class="item item-input">
+                <span class="input-label">Nome</span>
+                <input type="text" ng-model="user.name" required>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Cognome</span>
+                <input type="text" ng-model="user.surname">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Data di nascita</span>
+                <input type="date" ng-model="user.birthDate">
+            </label>
+
+            <button class="button button-positive" ng-click="persist();">
+                Salva
+            </button>
+        </ion-content>
+    </ion-pane>
+</ion-view>

@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic'])
+angular.module('app', ['ionic', 'app.service', 'app.controller'])
     .run(function($ionicPlatform) {
       $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -15,9 +15,7 @@ var app = angular.module('starter', ['ionic'])
           StatusBar.styleDefault();
         }
       });
-    });
-
-app.config(function ($stateProvider, $urlRouterProvider) {
+    }).config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
             .state('menu', {
                 url: "/menu",
@@ -39,6 +37,19 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                         templateUrl: "templates/users.html",
                         controller: 'UsersCtrl'
                     }
+                },
+                resolve: {
+                    users: function (UserService) {
+                        return UserService.findAll();
+                    }
+                }
+            }).state('menu.userDetails', {
+                url: "/userDetails",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/userDetails.html",
+                        controller: 'UserDetailsCtrl'
+                    }
                 }
             }).state('menu.settings', {
                 url: "/settings",
@@ -51,9 +62,4 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             });
             
     $urlRouterProvider.otherwise('/menu/dates');
-});
-
-
-app.controller('AppCtrl', function($scope, $state){
-    
 });
