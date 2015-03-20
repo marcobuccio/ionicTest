@@ -3,18 +3,11 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
     </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <button class="button  button-outline button-light ion-plus " ng-click="add() ">
-        </button>
-    </ion-nav-buttons>
     <ion-pane>
         <ion-content>
             <ion-list>
-                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="date in dates" type="item-text-wrap" href="#/menu/user/{{date.id}}">
+                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="date in dates" type="item-text-wrap">
                     <h2>{date.{user.name}} {{date.user.surname}}</h2>
-                    <ion-option-button class="button-assertive" ng-click="remove(user.id)">
-                        Delete
-                    </ion-option-button>
                 </ion-item>
             </ion-list>
         </ion-content>

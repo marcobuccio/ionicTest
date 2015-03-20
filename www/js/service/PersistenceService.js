@@ -11,7 +11,11 @@ angular.module('app.service', [])
                 name: "TEXT",
                 surname: "TEXT",
                 img: "TEXT",
-                birthDate: "DATE"
+                birthDate: "DATE",
+                address: "TEXT",
+                number: "NUM",
+                city: "TEXT",
+                province: "TEXT"
             }),
             UserContact: persistence.define('userContact', {
                 name: 'TEXT',
@@ -58,13 +62,50 @@ angular.module('app.service', [])
                 var defer = $q.defer();
                 persistence.schemaSync(function () {
                     data.Property.findBy("name", "db_version", function(data){
-                        if (data === null){
-                            that.insertTestData();
-                        }
-                        inited = true;
-                        defer.resolve(); 
+                        var version = "0";
+                        if (data !== null){
+                            version = data.value;
+                        } 
+                        
+                        that.updateSchema(version).then(function(newVersion){
+                            inited = true;
+                            that.schema.Property.findBy("name", "db_version", function(data){
+                                if (data !== null){
+                                    data.value = newVersion;
+                                    persistence.flush();
+                                } else {
+                                    var dbVersion = new that.schema.Property();
+                                    dbVersion.name = "db_version";
+                                    dbVersion.value = newVersion;
+                                    persistence.add(dbVersion);
+                                    persistence.flush();
+                                }
+                                defer.resolve();        
+                            });
+                        });
                     });
                 });    
+                return defer.promise;
+            },
+            updateSchema: function(version){
+                var that = this;
+                
+                console.log("update " + version); 
+                var defer = $q.defer();
+                switch(version){
+                    case "0": 
+                        this.insertTestData();
+                        defer.resolve("1"); 
+                        break;
+                    /*case "1": 
+                        persistence.reset(null, function(){
+                            that.insertTestData();
+                            defer.resolve("2"); 
+                        });
+                        break;*/
+                    default:
+                        defer.resolve(version); 
+                };
                 return defer.promise;
             },
             reset: function () {
@@ -115,11 +156,6 @@ angular.module('app.service', [])
                 op.price = 5;
                 persistence.add(op);
                 
-                var dbVersion = new data.Property();
-                dbVersion.name = "db_version";
-                dbVersion.value = "1";
-                persistence.add(dbVersion);
-
                 var users = [];
                 for (var i = 0; i < 4; i++) {
                     var u = new data.User();
