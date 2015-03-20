@@ -1,9 +1,9 @@
 angular.module('app.service')
-    .factory('DateService', function ($q, PersistenceService) {
+    .factory('PropertyService', function ($q, PersistenceService) {
         return {
-            findAll: function () {
+            find: function (name) {
                 var defer = $q.defer();
-                PersistenceService.schema.Date.all().prefetch('user').list(function (data) {
+                PersistenceService.schema.Property.findBy('name', name, function (data) {
                     defer.resolve(data);
                 });
                 return defer.promise;

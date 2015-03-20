@@ -1,6 +1,6 @@
 angular.module('app.service', [])
     .factory('PersistenceService', function ($q) {
-        persistence.store.websql.config(persistence, 'GestionaleDb2', 'PersistenceJS DB', 5 * 1024 * 1024);
+        persistence.store.websql.config(persistence, 'GestionaleDb', 'PersistenceJS DB', 5 * 1024 * 1024);
 
         var data = {
             Property: persistence.define('property', {
@@ -22,37 +22,49 @@ angular.module('app.service', [])
             UserContactType: persistence.define('userContactType', {
                 name: 'TEXT'
             }),
-            OrganizerType: persistence.define('organizerType', {
+            DateType: persistence.define('dateType', {
                 name: 'TEXT',
                 price: 'NUM'
             }),
-            OrganizerPlace: persistence.define("organizerPlace", {
+            DatePlace: persistence.define("datePlace", {
                 name: 'TEXT',
                 price: 'NUM'
             }),
-            Organizer: persistence.define('organizer', {
+            Date: persistence.define('date', {
                 date: 'DATE',
                 slotFrom: 'INT',
                 slotTo: 'INT',
                 note: 'TEXT'
+            }),
+            Document: persistence.define('document', {
+                date: "DATE"
             })
         };
 
-        data.User.hasMany('organizers', data.Organizer, 'user');
+        data.User.hasMany('date', data.Date, 'user');
         data.User.hasMany('userContacts', data.UserContact, 'user');
         data.UserContactType.hasMany('userContacts', data.UserContact, 'userContactType');
 
-        data.Organizer.hasMany('users', data.User, 'organizer');
-        data.OrganizerPlace.hasMany('organizers', data.Organizer, 'OrganizerPlace');
-        data.OrganizerType.hasMany('organizers', data.Organizer, 'OrganizerType');
+        data.Date.hasMany('users', data.User, 'date');
+        data.DatePlace.hasMany('date', data.Date, 'datePlace');
+        data.DateType.hasMany('date', data.Date, 'dateType');
 
         return {
+            inited: false,
             schema: data,
             init: function () {
+                var that = this;
+                
                 var defer = $q.defer();
                 persistence.schemaSync(function () {
-                    defer.resolve();
-                });
+                    data.Property.findBy("name", "db_version", function(data){
+                        if (data === null){
+                            that.insertTestData();
+                        }
+                        inited = true;
+                        defer.resolve(); 
+                    });
+                });    
                 return defer.promise;
             },
             reset: function () {
@@ -83,25 +95,30 @@ angular.module('app.service', [])
                 ct.name = 'Altro';
                 persistence.add(ct);
 
-                var ot = new data.OrganizerType();
+                var ot = new data.DateType();
                 ot.name = "Valutazione";
                 ot.price = 40;
                 persistence.add(ot);
 
-                ot = new data.OrganizerType();
+                ot = new data.DateType();
                 ot.name = "Trattamento";
                 ot.price = 30;
                 persistence.add(ot);
 
-                var op = new data.OrganizerPlace();
+                var op = new data.DatePlace();
                 op.name = "In studio";
                 op.price = 0;
                 persistence.add(op);
 
-                op = new data.OrganizerPlace();
+                op = new data.DatePlace();
                 op.name = "Domiciliare";
                 op.price = 5;
                 persistence.add(op);
+                
+                var dbVersion = new data.Property();
+                dbVersion.name = "db_version";
+                dbVersion.value = "1";
+                persistence.add(dbVersion);
 
                 var users = [];
                 for (var i = 0; i < 4; i++) {
@@ -115,13 +132,13 @@ angular.module('app.service', [])
 
                 var organizers = [];
                 for (i = 0; i < 4; i++) {
-                    var o = new data.Organizer();
+                    var o = new data.Date();
                     o.date = new Date();
                     o.slotFrom = 10 + i;
                     o.slotTo = 11 + i;
                     o.user = users[i];
-                    o.organizerPlace = op;
-                    o.organizerType = ot;
+                    o.datePlace = op;
+                    o.dateType = ot;
                     o.note = "Alcune note...";
                     persistence.add(o);
                     organizers.push(o);

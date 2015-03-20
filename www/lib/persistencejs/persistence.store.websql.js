@@ -73,6 +73,7 @@ persistence.store.websql.config = function(persistence, dbname, description, siz
 
   persistence.db.html5.transaction = function (t) {
     var that = {};
+    
     that.executeSql = function (query, args, successFn, errorFn) {
       if(persistence.debug) {
         console.log(query, args);
@@ -85,7 +86,9 @@ persistence.store.websql.config = function(persistence, dbname, description, siz
             }
             successFn(results);
           }
-        }, errorFn);
+        }, function(tx, error){
+            console.log(error);
+        });
     };
     return that;
   };

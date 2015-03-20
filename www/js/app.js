@@ -17,11 +17,14 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
       });
     }).config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
+            .state('loading', {
+                url: "/loading",
+                templateUrl: "templates/loading.html",
+            })
             .state('menu', {
                 url: "/menu",
                 abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
+                templateUrl: "templates/menu.html"
             }).state('menu.dates', {
                 url: "/dates",
                 views: {
@@ -29,9 +32,15 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
                         templateUrl: "templates/dates.html",
                         controller: 'DatesCtrl'
                     }
+                },
+                resolve: {
+                    dates: function(DateService){
+                        return DateService.findAll();
+                    }
                 }
             }).state('menu.users', {
                 url: "/users",
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: "templates/users.html",
@@ -43,12 +52,35 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
                         return UserService.findAll();
                     }
                 }
-            }).state('menu.userDetails', {
-                url: "/userDetails",
+            }).state('menu.user', {
+                url: "/user/:userId",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/userDetails.html",
-                        controller: 'UserDetailsCtrl'
+                        templateUrl: "templates/user.html",
+                        controller: 'UserCtrl'
+                    }
+                },
+                resolve:{
+                    user: function($q, $stateParams, UserService){
+                        if ($stateParams.userId !== '') {
+                            return UserService.find($stateParams.userId);  
+                        } else {
+                            return new PersistenceService.schema.User();
+                        }
+                    }
+                }
+            }).state('menu.documents', {
+                url: "/documents",
+                cache: false,
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/documents.html",
+                        controller: 'DocumentsCtrl'
+                    }
+                },
+                resolve: {
+                    documents: function (DocumentService) {
+                        return DocumentService.findAll();
                     }
                 }
             }).state('menu.settings', {
@@ -61,5 +93,5 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
                 }
             });
             
-    $urlRouterProvider.otherwise('/menu/dates');
+    $urlRouterProvider.otherwise('/loading');
 });

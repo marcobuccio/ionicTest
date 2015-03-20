@@ -1,15 +1,11 @@
 angular.module('app.controller')
     .controller('UserCtrl',
-        function ($scope, $stateParams, $state, UserService, PersistenceService) {
-            $scope.user = {};
+        function ($scope, $stateParams, $state, $ionicHistory, user, PersistenceService) {
+            $scope.user = user;
 
-            if ($stateParams.userId !== '') {
-                UserService.find($stateParams.userId).then(function (data) {
-                    $scope.user = data;
-                });
-            } else {
-                $scope.user = new PersistenceService.schema.User();
-            }
+            $scope.goBack = function() {
+                $ionicHistory.goBack();
+            };
 
             $scope.persist = function () {
                 if ($stateParams.userId === '') {
@@ -17,11 +13,7 @@ angular.module('app.controller')
                 }
 
                 PersistenceService.flush().then(function () {
-                    $state.go("tab.users", {}, {
-                        reload: true,
-                        inherit: false,
-                        notify: true
-                    });
+                    $state.go("menu.users");
                 });
             };
         });

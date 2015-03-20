@@ -3,7 +3,7 @@ angular.module('app.controller')
             $scope.users = users;
 
             $scope.add = function () {
-                $state.go("menu.user-detail");
+                $state.go("menu.user");
             };
 
             $scope.remove = function (userId) {
