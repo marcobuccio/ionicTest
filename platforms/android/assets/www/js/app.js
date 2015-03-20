@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic'])
+angular.module('app', ['ionic', 'app.service', 'app.controller'])
     .run(function($ionicPlatform) {
       $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -15,53 +15,90 @@ var app = angular.module('starter', ['ionic'])
           StatusBar.styleDefault();
         }
       });
-    });
-
-app.config(function ($stateProvider, $urlRouterProvider) {
+    }).config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
+            .state('loading', {
+                url: "/loading",
+                templateUrl: "templates/loading.html"
+            })
             .state('menu', {
                 url: "/menu",
                 abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
-            }).state('menu.main', {
-                url: "/main",
+                templateUrl: "templates/menu.html"
+            }).state('menu.dates', {
+                url: "/dates",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/main.html",
-                        controller: 'MenuCtrl'
+                        templateUrl: "templates/dates.html",
+                        controller: 'DatesCtrl'
+                    }
+                },
+                resolve: {
+                    dates: function(DateService){
+                        return DateService.findAll();
                     }
                 }
-            }).state('menu.es_1', {
-                url: "/es_1",
+            }).state('menu.users', {
+                url: "/users",
+                cache: false,
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/es_1.html",
-                        controller: 'Es1Ctrl'
+                        templateUrl: "templates/users.html",
+                        controller: 'UsersCtrl'
+                    }
+                },
+                resolve: {
+                    users: function (UserService) {
+                        return UserService.findAll();
                     }
                 }
-            }).state('menu.es_2', {
-                url: "/es_2",
+            }).state('menu.user', {
+                url: "/user/:userId",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/es_2.html",
-                        controller: 'Es1Ctrl'
+                        templateUrl: "templates/user.html",
+                        controller: 'UserCtrl'
+                    }
+                },
+                resolve:{
+                    user: function($stateParams, PersistenceService, UserService){
+                        if ($stateParams.userId !== '') {
+                            return UserService.find($stateParams.userId);  
+                        } else {
+                            return new PersistenceService.schema.User();
+                        }
+                    },
+                    contacts: function($stateParams, UserService){
+                        if ($stateParams.userId !== '') {
+                            return UserService.findContacts($stateParams.userId);  
+                        } else {
+                            return [];
+                        }
+                    }
+                }
+            }).state('menu.documents', {
+                url: "/documents",
+                cache: false,
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/documents.html",
+                        controller: 'DocumentsCtrl'
+                    }
+                },
+                resolve: {
+                    documents: function (DocumentService) {
+                        return DocumentService.findAll();
+                    }
+                }
+            }).state('menu.settings', {
+                url: "/settings",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/settings.html",
+                        controller: 'SettingsCtrl'
                     }
                 }
             });
             
-    $urlRouterProvider.otherwise('/menu/main');
-});
-
-
-app.controller('AppCtrl', function($scope, $state){
-    
-});
-app.controller('MenuCtrl', function($scope, $state, $location){
-    $scope.goto = function(path){
-        $state.go(path);
-    };
-});
-app.controller('Es1Ctrl', function($scope){
-    
+    $urlRouterProvider.otherwise('/loading');
 });

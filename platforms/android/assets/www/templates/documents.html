@@ -1,0 +1,15 @@
+<ion-view view-title="Documenti">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+    </ion-nav-buttons>
+    <ion-pane>
+        <ion-content>
+            <ion-list>
+                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="document in documents" type="item-text-wrap" href="#/menu/document/{{document.id}}">
+                    <h2>{{document.date}}</h2>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-pane>
+</ion-view>

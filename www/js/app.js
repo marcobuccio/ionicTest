@@ -19,7 +19,7 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
     $stateProvider
             .state('loading', {
                 url: "/loading",
-                templateUrl: "templates/loading.html",
+                templateUrl: "templates/loading.html"
             })
             .state('menu', {
                 url: "/menu",
@@ -61,11 +61,18 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
                     }
                 },
                 resolve:{
-                    user: function($q, $stateParams, UserService){
+                    user: function($stateParams, PersistenceService, UserService){
                         if ($stateParams.userId !== '') {
                             return UserService.find($stateParams.userId);  
                         } else {
                             return new PersistenceService.schema.User();
+                        }
+                    },
+                    contacts: function($stateParams, UserService){
+                        if ($stateParams.userId !== '') {
+                            return UserService.findContacts($stateParams.userId);  
+                        } else {
+                            return [];
                         }
                     }
                 }
