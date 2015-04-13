@@ -10,7 +10,7 @@ angular.module('app.service')
             },
             findContacts: function (userId) {
                 var defer = $q.defer();
-                PersistenceService.schema.UserContact.findBy('user', userId, function (data) {
+                PersistenceService.schema.UserContact.all().filter("user", '=', userId).list(null, function (data) {
                     defer.resolve(data);
                 });
                 return defer.promise;
@@ -18,6 +18,13 @@ angular.module('app.service')
             findAll: function () {
                 var defer = $q.defer();
                 PersistenceService.schema.User.all().list(function (data) {
+                    defer.resolve(data);
+                });
+                return defer.promise;
+            },
+            findContactTypes: function(){
+                var defer = $q.defer();
+                PersistenceService.schema.UserContactType.all().list(function (data) {
                     defer.resolve(data);
                 });
                 return defer.promise;

@@ -68,27 +68,35 @@
                     </label>
                     Avviso SMS  
                 </li>
-                <li class="item item-divider item-balanced">
-                    <h4>Contatti</h4>
-                    <button class="button ion-icon ion-plus" ng-click="addContact();"></button>
-                </li>
-                
-                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="contact in contacts" type="item-text-wrap">
-                    <li class="item item-input">
-                        <label class="input-label">
-                            Nome
-                        </label>        
-                        <input type="text" ng-model="contact.nome">
-                    <Li>
-                    <li class="item item-input">
-                        <label class="input-label">
-                            Cognome
-                        </label>        
-                        <input type="text" ng-model="contact.surname">
-                    <Li>
-                </ion-item>
-                
             </ul>
+                
+            <div class="item item-divider item-balanced">
+                Contatti
+            </div>
+                
+            <ion-item class="" ng-repeat="contact in contacts" type="item-text-wrap">
+                <div class="item item-input">
+                    <label class="input-label">
+                        Nome
+                    </label>        
+                    <input type="text" ng-model="contact.nome">
+                    <button class="button button-icon ion-trash-b" ng-click="removeContact(contact);"></button>
+                </div>
+                <div class="item item-input">
+                    <label class="input-label">
+                        Cognome
+                    </label>        
+                    <input type="text" ng-model="contact.surname">
+                </div>
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Colori
+                    </div>
+                    <select ng-model="contact.userContactType" ng-options="opt as opt.name for opt in userContactTypes track by opt.id">
+                    </select>
+                </label>
+            </ion-item>
+            <button class="button ion-icon ion-plus" ng-click="addContact();"></button>
             
             <button class="button button-positive button-balanced button-full" ng-click="persist();">
                 Salva

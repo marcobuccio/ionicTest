@@ -9,8 +9,11 @@
     <ion-pane>
         <ion-content>
             <ion-list>
-                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="date in dates" type="item-text-wrap">
-                    <h2>{date.{user.name}} {{date.user.surname}}</h2>
+                <ion-item class="" ng-repeat="day in days" type="item-text-wrap">
+                    <h2>{{day.date | date}}</h2>
+                    <ion-item class="" ng-repeat="slot in day.slots" type="item-text-wrap">    
+                        {{slot.date | date : 'hh'}}
+                    </ion-item>
                 </ion-item>
             </ion-list>
         </ion-content>

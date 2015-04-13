@@ -1,8 +1,9 @@
 angular.module('app.controller')
     .controller('UserCtrl',
-        function ($scope, $stateParams, $state, $ionicHistory, PersistenceService, user, contacts) {
+        function ($scope, $stateParams, $state, $ionicHistory, PersistenceService, user, contacts, userContactTypes) {
             $scope.user = user;
             $scope.contacts = contacts;
+            $scope.userContactTypes = userContactTypes;
             
             $scope.addContact = function(){
                 var uc = new PersistenceService.schema.UserContact();
@@ -14,7 +15,17 @@ angular.module('app.controller')
             };
             
             $scope.goBack = function() {
-                $ionicHistory.goBack();
+                if ($ionicHistory.backView() !== null){
+                    $ionicHistory.goBack();
+                } else {
+                    $state.go("menu.users");
+                }
+            };
+            
+            $scope.removeContact = function(contact){
+                $scope.contacts.remove(contact);
+                persistence.remove(contact);
+                PersistenceService.flush();
             };
             
             $scope.persist = function () {

@@ -74,6 +74,9 @@ angular.module('app', ['ionic', 'app.service', 'app.controller'])
                         } else {
                             return [];
                         }
+                    },
+                    userContactTypes: function(UserService){
+                        return UserService.findContactTypes();
                     }
                 }
             }).state('menu.documents', {
